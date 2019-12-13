@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="72dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+
+        <ImageView
+            android:src="@drawable/netease_music_logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/netease_logo" />
+
+
+        <EditText
+            android:id="@+id/url_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri"
+            android:maxLines="1"
+            android:hint="@string/copy_url_to_here"
+            android:textAlignment="center"
+            android:drawableStart="@drawable/round_link_24"
+            android:drawablePadding="6dp"
+            android:importantForAutofill="no" />
+
+        <Button
+            android:id="@+id/submit_url_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp"
+            android:text="@string/detect_url"
+            android:layout_gravity="center_horizontal" />
+
+
+        <TextView
+            android:id="@+id/recommend_to_friends_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:layout_margin="24dp"
+            android:text="@string/recommend_to_friends"
+            android:drawableStart="@drawable/round_thumb_up_24"
+            android:drawablePadding="6dp"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
+

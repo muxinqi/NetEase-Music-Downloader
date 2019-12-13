@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">M Tools</string>
+    <string name="copy_url_to_here">复制单曲或歌单链接到这里</string>
+    <string name="detect_url">检测</string>
+    <string name="song_name">歌曲名称</string>
+    <string name="singer_name">歌手</string>
+    <string name="album_image">专辑图</string>
+    <string name="song_alias_name">歌曲别名</string>
+    <string name="copy_music_url">复制链接</string>
+    <string name="playlist_name">歌单名称</string>
+    <string name="playlist_owner_name">歌单拥有者姓名</string>
+    <string name="playlist_owner_cover_img">歌单创建者头像</string>
+    <string name="recommend_to_friends">推荐给朋友</string>
+    <string name="like">点赞</string>
+    <string name="call_is_the_way">打电话才够直接！</string>
+    <string name="netease_logo">网易云logo</string>
+    <string name="link_ico">链接图标</string>
+</resources>
