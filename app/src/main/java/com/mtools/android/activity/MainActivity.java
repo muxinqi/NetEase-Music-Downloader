@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 组件初始化
         Toolbar toolbar = findViewById(R.id.toolbar);
         Button button = findViewById(R.id.submit_url_button);
+        Button favourite_list_button = findViewById(R.id.favour_list_button);
         TextView likeTextView = findViewById(R.id.recommend_to_friends_textview);
         // 配置Toolbar - 主活动不显示返回键
         setSupportActionBar(toolbar);
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 监听点击操作
         button.setOnClickListener(this);
         likeTextView.setOnClickListener(this);
+        favourite_list_button.setOnClickListener(this);
         // 接收系统广播
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
@@ -84,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.recommend_to_friends_textview: {
                 Intent intent = new Intent(MainActivity.this, RecommendToFriends.class);
                 startActivity(intent);
+                break;
+            }
+            case R.id.favour_list_button: {
+                Intent intent = new Intent(MainActivity.this, FavouriteListActivity.class);
+                startActivity(intent);
+                break;
             }
             default:
                 break;

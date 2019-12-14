@@ -71,7 +71,6 @@ public class crack_playlist extends AppCompatActivity {
         playlistOwnerAvatarImage = findViewById(R.id.playlist_owner_avatar_image);
         playlistNameText = findViewById(R.id.playlist_name_text);
         playlistOwnerText = findViewById(R.id.playlist_owner_name_text);
-
         playlistListView = findViewById(R.id.playlist_listview);
 
         // ListView Array Data
@@ -169,12 +168,7 @@ public class crack_playlist extends AppCompatActivity {
             Log.d("GOOD", "id: "+ songId + ", " + songName + ", " + songCoverUrl);
             Music item = new Music(songId, songName, artistsName, songCoverUrl);
             musicList.add(item);
-
         }
-//        for(int i = 0; i < 100; i++) {
-//            Music a = new Music("A","https://cdn.v2ex.com/avatar/677c/39d0/274232_large.png");
-//            musicList.add(a);
-//        }
     }
 
     // Toolbar的事件---返回

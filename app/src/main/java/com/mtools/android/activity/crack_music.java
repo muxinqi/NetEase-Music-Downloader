@@ -7,9 +7,11 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -24,12 +26,15 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mtools.android.R;
 import com.mtools.android.class_define.MusicDownload.Data;
 import com.mtools.android.class_define.MusicDownload.MusicDownload;
 import com.mtools.android.class_define.single_music.A_Song;
 import com.mtools.android.class_define.single_music.Artists;
 import com.mtools.android.class_define.single_music.Songs;
+import com.mtools.android.db.MyDatabaseHelper;
+import com.mtools.android.other.GlideApp;
 import com.mtools.android.service.DownloadService;
 import com.mtools.android.util.HttpUtil;
 import com.mtools.android.util.Utility;
@@ -50,6 +55,12 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
     private String musicId = null;
 
     private String musicUrl = null;
+
+    private String musicName = null;
+
+    private String musicArtistsName = null;
+
+    private String musicCoverUrl = null;
 
     private String musicFileName = null;
 
@@ -72,6 +83,8 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
     private boolean isStartDownload = false;
 
     private boolean isPauseDownload = false;
+
+    private MyDatabaseHelper dbHelper;
 
     private DownloadService.DownloadBinder downloadBinder;
 
@@ -105,6 +118,8 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
         musicPauseButton = findViewById(R.id.music_pause_button);
         Button musicStopButton = findViewById(R.id.music_stop_button);
         Button musicDownloadButton = findViewById(R.id.music_download_button);
+        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+        dbHelper = new MyDatabaseHelper(this, "FavouriteList.db", null, 1);
 
         // 激活 Toolbar
         setSupportActionBar(toolbar);
@@ -114,6 +129,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
         musicPauseButton.setOnClickListener(this);
         musicStopButton.setOnClickListener(this);
         musicDownloadButton.setOnClickListener(this);
+        floatingActionButton.setOnClickListener(this);
 
         // 启动下载服务
         Intent intent = new Intent(this, DownloadService.class);
@@ -154,12 +170,6 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
         });
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -245,6 +255,18 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                     downloadBinder.pauseDownload();
                     isPauseDownload = true;
                 }
+                break;
+            }
+            case R.id.floatingActionButton: {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                // 开始组装数据
+                values.put("musicId", musicId);
+                values.put("songName", musicName);
+                values.put("artistName", musicArtistsName);
+                values.put("songCoverUrl", musicCoverUrl);
+                // 插入数据
+                db.insert("FavouriteList", null, values);
                 break;
             }
             default:
@@ -370,7 +392,8 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
             Log.d("GOOD", "songs_getName: "+songs.getName());
 
             // 显示歌曲名称
-            songNameText.setText(songs.getName());
+            musicName = songs.getName();
+            songNameText.setText(musicName);
             String song_alias;
             for (String alias : songs.getAlias()) {
                 if (alias != null) {
@@ -390,25 +413,22 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                 }
                 count++;
             }
-
-            String singer_name = new String(singer_name_stb);
-
             // 显示歌手姓名
-            artistsNameText.setText(singer_name);
-
-            musicFileName = songs.getName()+" - "+singer_name+".mp3";
+            musicArtistsName = new String(singer_name_stb);
+            artistsNameText.setText(musicArtistsName);
+            musicFileName = songs.getName()+" - "+musicArtistsName+".mp3";
 
             //记录专辑图链接
-            String picUrl = songs.getAlbum().getPicUrl() + "?param=200y200";
-            Log.d("GOOD", "picUrl: "+picUrl);
+            musicCoverUrl = songs.getAlbum().getPicUrl() + "?param=200y200";
+            Log.d("GOOD", "picUrl: "+musicCoverUrl);
 
             // 显示专辑图
-            loadAlbumImg(picUrl);
+            loadAlbumImg(musicCoverUrl);
         }
     }
     /**
      * 传入专辑图链接
-     * 调用Glide显示图片
+     * 调用Glide显示圆角图片
      * */
     private void loadAlbumImg(final String url) {
         runOnUiThread(new Runnable() {
