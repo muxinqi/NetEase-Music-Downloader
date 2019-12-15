@@ -15,4 +15,9 @@
     <string name="call_is_the_way">打电话才够直接！</string>
     <string name="netease_logo">网易云logo</string>
     <string name="link_ico">链接图标</string>
+    <string name="favourite_list_text">显示喜欢的歌单名称</string>
+    <string name="favourite_list_exitor">编辑喜欢的歌单名称</string>
+    <string name="edit">编辑</string>
+    <string name="done">完成</string>
+    <string name="input_new_favourite_list_name">修改喜欢的歌单名称</string>
 </resources>

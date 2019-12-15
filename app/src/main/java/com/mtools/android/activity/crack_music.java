@@ -11,12 +11,12 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mtools.android.R;
@@ -186,6 +185,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
      * */
     private void initMediaPlayer() {
         try {
+            Log.d("GOOD", "musicUrl: "+musicUrl);
             mediaPlayer.setDataSource(musicUrl);
             mediaPlayer.prepare();
             musicStartButton.setVisibility(View.VISIBLE);
@@ -198,6 +198,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            // 点击音乐开始按钮
             case R.id.music_start_button: {
                 if (!mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
@@ -206,6 +207,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                 }
                 break;
             }
+            // 点击音乐暂停按钮
             case R.id.music_pause_button: {
                 if (mediaPlayer.isPlaying()) {
                     mediaPlayer.pause();
@@ -214,6 +216,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                 }
                 break;
             }
+            // 点击音乐停止按钮
             case R.id.music_stop_button: {
                 if (mediaPlayer.isPlaying()) {
                     mediaPlayer.reset();
@@ -221,6 +224,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                 }
                 break;
             }
+            // 点击下载按钮
             case R.id.music_download_button: {
                 Log.d("GOOD", "onClick: download");
                 Log.d("GOOD", "onClick: binder is null: "+(downloadBinder == null));
@@ -257,16 +261,36 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                 }
                 break;
             }
+            // 点击悬浮按钮
             case R.id.floatingActionButton: {
+                // 查找当前歌曲是否已存在数据库中
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                // 开始组装数据
-                values.put("musicId", musicId);
-                values.put("songName", musicName);
-                values.put("artistName", musicArtistsName);
-                values.put("songCoverUrl", musicCoverUrl);
-                // 插入数据
-                db.insert("FavouriteList", null, values);
+                Cursor cursor = db.query("FavouriteList", null, null, null, null, null, null);
+                int count = 0;
+                if (cursor.moveToNext()) {
+                    do {
+                        if (cursor.getString(cursor.getColumnIndex("musicId")).equals(musicId)) {
+                            count++;
+                        }
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+                // 不存在 则添加
+                if (count == 0) {
+                    ContentValues values = new ContentValues();
+                    // 开始组装数据
+                    values.put("musicId", musicId);
+                    values.put("songName", musicName);
+                    values.put("artistName", musicArtistsName);
+                    values.put("songCoverUrl", musicCoverUrl);
+                    values.put("isShow", 1);
+                    // 插入数据
+                    db.insert("FavouriteList", null, values);
+                    Toast.makeText(crack_music.this, "《"+musicName+"》加入收藏歌单成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    // 否则 提示歌曲已存在
+                    Toast.makeText(crack_music.this, "《" + musicName + "》已存在于收藏歌单", Toast.LENGTH_SHORT).show();
+                }
                 break;
             }
             default:
@@ -434,7 +458,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Glide.with(crack_music.this)
+                GlideApp.with(crack_music.this)
                         .load(url)
                         .transform(new RoundedCornersTransformation(25, 0, RoundedCornersTransformation.CornerType.ALL))
                         .error(R.drawable.album_loading_img)

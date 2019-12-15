@@ -13,18 +13,34 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     "musicId text, " +
                     "songName text, " +
                     "artistName text, " +
-                    "songCoverUrl text)";
+                    "songCoverUrl text, " +
+                    "isShow integer)";
+
+    public static final String CREATE_FAVOURITE_LIST_INFO =
+            "create table FavouriteListInfo (" +
+                    "id integer primary key autoincrement, " +
+                    "listName text)";
 
     private Context mContext;
+
+    private String dbName;
 
     public MyDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         mContext = context;
+        dbName = name;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_FAVOURITE_LIST);
+        if (dbName.equals("FavouriteList.db")) {
+            db.execSQL(CREATE_FAVOURITE_LIST);
+        } else if (dbName.equals("FavouriteListInfo.db")) {
+            db.execSQL(CREATE_FAVOURITE_LIST_INFO);
+        } else {
+            Toast.makeText(mContext, "Create "+dbName+" failed", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Toast.makeText(mContext, "Create Database succeeded", Toast.LENGTH_SHORT).show();
     }
 
