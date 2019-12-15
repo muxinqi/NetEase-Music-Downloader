@@ -30,6 +30,7 @@ import com.mtools.android.other.GlideApp;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,6 +49,8 @@ public class FavouriteListActivity extends AppCompatActivity implements View.OnC
     private TextView listNameTextView;
 
     private EditText inputListNameEditText;
+
+    private EditText searchContentEditText;
 
     private ImageButton editListNameButton;
 
@@ -70,6 +73,8 @@ public class FavouriteListActivity extends AppCompatActivity implements View.OnC
         editListNameButton = findViewById(R.id.edit_favourite_list_name);
         doneListNameButton = findViewById(R.id.done_favourite_list_name);
         favouriteListListView = findViewById(R.id.favourite_listview);
+        searchContentEditText = findViewById(R.id.search_content_edit_ext);
+        ImageButton searchImgBtn = findViewById(R.id.search_list_item_img_btn);
         MyDatabaseHelper dbHelper = new MyDatabaseHelper(this, "FavouriteList.db", null, 1);
         db = dbHelper.getWritableDatabase();
         favouriteListInfoDBHelper = new MyDatabaseHelper(this, "FavouriteListInfo.db", null, 1);
@@ -77,6 +82,7 @@ public class FavouriteListActivity extends AppCompatActivity implements View.OnC
         // 按钮点击监听
         editListNameButton.setOnClickListener(this);
         doneListNameButton.setOnClickListener(this);
+        searchImgBtn.setOnClickListener(this);
 
         // 按键长按删除
         favouriteListListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -114,6 +120,8 @@ public class FavouriteListActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+        db.delete("FavouriteList", "isShow = ?", new String[] { "0" });
+
         initListInfoDB();
         showListInfoDB();
 
@@ -147,6 +155,51 @@ public class FavouriteListActivity extends AppCompatActivity implements View.OnC
                 editListNameButton.setVisibility(View.VISIBLE);
                 inputListNameEditText.setVisibility(View.GONE);
                 doneListNameButton.setVisibility(View.GONE);
+                break;
+            }
+            case R.id.search_list_item_img_btn: {
+                String searchContent = searchContentEditText.getText().toString();
+                // 如果搜索内容不为空 进入搜索
+                if (!searchContent.equals("")) {
+                    // 高级for循环中只适用于单次(删除/增加)元素并(break/return)结束操作
+//                    int count = 0;
+//                    for (FavouriteMusicItem item : favouriteList) {
+//                        int searchNameResult = item.getSongName().indexOf(searchContent);
+//                        int searchArtistResult = item.getArtistName().indexOf(searchContent);
+//                        if ((searchNameResult != -1) || (searchArtistResult != -1)) {
+//                            count++;
+//                        } else {
+//                            favouriteList.remove(item);
+//                        }
+//                    }
+                    // 遍历并删除不含有搜索内容的元素
+                    // 留下的就是含有搜索内容的列表
+                    int count = 0;
+                    Iterator<FavouriteMusicItem> iterator = favouriteList.iterator();
+                    while (iterator.hasNext()) {
+                        FavouriteMusicItem item = iterator.next();
+                        int searchNameResult = item.getSongName().indexOf(searchContent);
+                        int searchArtistResult = item.getArtistName().indexOf(searchContent);
+                        if ((searchNameResult != -1) || (searchArtistResult != -1)) {
+                            count++;
+                        } else {
+                            iterator.remove();
+                        }
+                    }
+                    // 若不含有相应的搜索结果 弹出提示
+                    if (count == 0) {
+                        Toast.makeText(FavouriteListActivity.this, "无相应结果", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // 含有搜索结果 则显示
+                        showFavouriteItem();
+                    }
+                }
+                else {
+                    // 否则搜索内容为空 刷新列表
+                    // 适用于 第一次搜索完毕后 刷新全部列表用
+                    initFavouriteItem();
+                    showFavouriteItem();
+                }
                 break;
             }
             default:
@@ -212,6 +265,7 @@ public class FavouriteListActivity extends AppCompatActivity implements View.OnC
     private void initFavouriteItem() {
         // 查询 Favourite List 表中所有的数据
         Cursor cursor = db.query("FavouriteList", null, "isShow = 1", null, null, null, null);
+        favouriteList.clear();
         if (cursor.moveToNext()) {
             do {
                 // 遍历Cursor对象 取出数据并显示

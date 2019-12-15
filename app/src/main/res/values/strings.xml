@@ -20,4 +20,6 @@
     <string name="edit">编辑</string>
     <string name="done">完成</string>
     <string name="input_new_favourite_list_name">修改喜欢的歌单名称</string>
+    <string name="input_search_content">输入搜索内容</string>
+    <string name="search_img_btn">搜索按钮</string>
 </resources>

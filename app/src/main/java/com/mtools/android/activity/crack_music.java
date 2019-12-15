@@ -192,6 +192,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
             musicPauseButton.setVisibility(View.INVISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(crack_music.this, "音频获取失败，请检查API可用性", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -267,10 +268,15 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 Cursor cursor = db.query("FavouriteList", null, null, null, null, null, null);
                 int count = 0;
+                boolean isShow = true;
                 if (cursor.moveToNext()) {
                     do {
                         if (cursor.getString(cursor.getColumnIndex("musicId")).equals(musicId)) {
                             count++;
+                            if (count == 1) {
+                                isShow = (Integer.parseInt(cursor.getString(cursor.getColumnIndex("isShow"))) == 1);
+                                break;
+                            }
                         }
                     } while (cursor.moveToNext());
                 }
@@ -288,8 +294,13 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                     db.insert("FavouriteList", null, values);
                     Toast.makeText(crack_music.this, "《"+musicName+"》加入收藏歌单成功", Toast.LENGTH_SHORT).show();
                 } else {
-                    // 否则 提示歌曲已存在
-                    Toast.makeText(crack_music.this, "《" + musicName + "》已存在于收藏歌单", Toast.LENGTH_SHORT).show();
+                    if (!isShow) {
+                        // 存在但隐藏 修改为显示
+                        ContentValues values = new ContentValues();
+                        values.put("isShow", 1);
+                        db.update("FavouriteList", values, "musicId = ?", new String[] { musicId });
+                    }
+                    Toast.makeText(crack_music.this, "《"+musicName+"》已存在于收藏歌单", Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
