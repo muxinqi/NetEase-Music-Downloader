@@ -118,12 +118,14 @@ public class crack_playlist extends AppCompatActivity {
                 }
                 ImageView songImage = view.findViewById(R.id.playlist_item_song_image);
                 TextView songName = view.findViewById(R.id.playlist_item_song_name_text);
+                TextView artistsName = view.findViewById(R.id.playlist_item_singer_name_text);
                 // Glide
                 GlideApp.with(getContext())
                         .load(Objects.requireNonNull(music).getSongImgUrl())
-                        .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.ALL))
+                        .transform(new RoundedCornersTransformation(0, 0, RoundedCornersTransformation.CornerType.ALL))
                         .into(songImage);
                 songName.setText(music.getSongName());
+                artistsName.setText(music.getArtistsName());
                 return view;
             }
         });
@@ -150,7 +152,7 @@ public class crack_playlist extends AppCompatActivity {
         for (Tracks eachMusic : a_playlist.getPlaylist().getTracks()) {
             long songId = eachMusic.getId();
             String songName = eachMusic.getName();
-            String songCoverUrl = eachMusic.getAl().getPicUrl()+"?param=64y64";
+            String songCoverUrl = eachMusic.getAl().getPicUrl()+"?param=200y200";
             // 遍历歌手（一个或多个）
             // 循环拼接字符串使用StringBuilder
             StringBuilder artistsNameStrB = new StringBuilder();
