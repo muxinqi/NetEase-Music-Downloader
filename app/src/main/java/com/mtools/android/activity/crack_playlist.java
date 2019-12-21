@@ -73,28 +73,12 @@ public class crack_playlist extends AppCompatActivity {
         playlistOwnerText = findViewById(R.id.playlist_owner_name_text);
         playlistListView = findViewById(R.id.playlist_listview);
 
-        // ListView Array Data
-//        playlistListView = (ListView)findViewById(R.id.playlist_listview);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//                crack_playlist.this, android.R.layout.simple_list_item_1, data);
-//        playlistListView.setAdapter(adapter);
-
-        // ListView
-//        initPlaylist();
-//        PlaylistAdapter adapter = new PlaylistAdapter(crack_playlist.this, R.layout.playlist_item, musicList);
-//        playlistListView.setAdapter(adapter);
-
-        // Toolbar
+        // Toolbar 激活
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Display Playlist Info
-//        requestPlaylist();
-
-        // Display Playlist Info By Jackson
-
+        // 获取并显示歌单
         requestPlaylistByJackson();
-        Log.d("GOOD", "Request Playlist Info complete!");
 
     }
 
@@ -181,47 +165,6 @@ public class crack_playlist extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-    /*
-      OkHttp3 获取 JSON
-      Gson 反序列化 JSON 为 a_playlist 对象
-      */
-//    public void requestPlaylist() {
-//        Log.d("GOOD", "RequestPlaylist... ");
-//        // 使用 OkHttp3 访问playlistUrl获得response供内部使用
-//        HttpUtil.sendOkHttpRequest(playlistUrl, new Callback() {
-//            @Override
-//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                final String responseText = response.body().string();
-//                a_playlist = Utility.handleA_PlaylistResponse(responseText);
-//                Log.d("GOOD", "Get Playlist Object Successful!");
-//                Log.d("GOOD", "Here is the response Text: " + responseText);
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Log.d("GOOD", "Code: " + a_playlist.getCode());
-//                        if (a_playlist.getCode() == 200) {
-//                            showPlaylistInfo(a_playlist);
-//                        } else {
-//                            Toast.makeText(crack_playlist.this, "歌单状态码错误", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//            }
-//            @Override
-//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                Log.d("GOOD", "OkHttp3 Request Failed");
-//                e.printStackTrace();
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Toast.makeText(crack_playlist.this, "获取歌单信息失败", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        });
-//    }
 
     /**
      * OkHttp3 获取 JSON

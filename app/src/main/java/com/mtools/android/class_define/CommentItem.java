@@ -22,40 +22,19 @@ public class CommentItem {
         return commentName;
     }
 
-    public void setCommentName(String commentName) {
-        this.commentName = commentName;
-    }
-
     public String getCommentContent() {
         return commentContent;
-    }
-
-    public void setCommentContent(String commentContent) {
-        this.commentContent = commentContent;
     }
 
     public String getCommentAvatarUrl() {
         return commentAvatarUrl;
     }
 
-    public void setCommentAvatarUrl(String commentAvatarUrl) {
-        this.commentAvatarUrl = commentAvatarUrl;
-    }
-
-
     public Date getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
     public long getLikedCount() {
         return likedCount;
-    }
-
-    public void setLikedCount(long likedCount) {
-        this.likedCount = likedCount;
     }
 }

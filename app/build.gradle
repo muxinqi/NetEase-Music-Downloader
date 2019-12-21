@@ -29,8 +29,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     // OkHttp3
     implementation 'com.squareup.okhttp3:okhttp:4.2.1'
-    // Gson
-    implementation 'com.google.code.gson:gson:2.8.6'
     // Jackson
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
     // Glide
