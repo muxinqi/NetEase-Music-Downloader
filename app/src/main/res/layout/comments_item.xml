@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp"
+    android:foreground="?attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/commentators_avatar_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/comments_avatar_img" />
+
+        <TextView
+            android:id="@+id/commentators_name_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/commentators_avatar_image"
+            android:layout_alignParentTop="true"
+            android:textSize="16sp"
+            android:textColor="@color/comment_name"
+            android:text="@string/comments_name"
+            android:contentDescription="@string/song_name"/>
+
+        <TextView
+            android:id="@+id/commentators_content_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/commentators_avatar_image"
+            android:layout_below="@id/commentators_name_text"
+            android:text="@string/comments_content"
+            android:textSize="14sp"
+            android:contentDescription="@string/singer_name"
+            android:textColor="@color/comment_content"/>
+
+        <TextView
+            android:id="@+id/comment_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/commentators_avatar_image"
+            android:layout_below="@id/commentators_content_text"
+            android:layout_marginTop="5dp"
+            android:text="@string/comments_time"
+            android:textSize="12sp"
+            android:textColor="@color/comment_time"/>
+
+        <ImageView
+            android:src="@drawable/round_thumb_up_24"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_toStartOf="@id/comment_like_count_text"
+            android:layout_alignBottom="@id/comment_like_count_text"
+            android:layout_marginEnd="2dp"
+            android:contentDescription="@string/like"/>
+
+        <TextView
+            android:id="@+id/comment_like_count_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/liked_count"
+            android:textSize="12sp"
+            android:layout_alignBottom="@id/comment_time_text"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
+
+

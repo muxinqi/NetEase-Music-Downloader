@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.FavouriteListActivity"></activity>
+        <activity android:name=".activity.FavouriteListActivity" />
         <activity android:name=".activity.RecommendToFriends" />
 
         <service

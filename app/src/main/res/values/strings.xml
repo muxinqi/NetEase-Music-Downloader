@@ -22,4 +22,10 @@
     <string name="input_new_favourite_list_name">修改喜欢的歌单名称</string>
     <string name="input_search_content">输入搜索内容</string>
     <string name="search_img_btn">搜索按钮</string>
+    <string name="comments_name">评论人昵称</string>
+    <string name="comments_content">评论内容</string>
+    <string name="comments_avatar_img">评论人头像</string>
+    <string name="comments_time">评论时间</string>
+    <string name="liked_count">点赞数</string>
+    <string name="great_reviews">精彩评论</string>
 </resources>

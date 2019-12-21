@@ -6,4 +6,7 @@
     <color name="colorSongName">#000000</color>
     <color name="colorArtists">#CD3C3C3C</color>
     <color name="colorSongAlias">#717171</color>
+    <color name="comment_name">#2196F3</color>
+    <color name="comment_content">#000000</color>
+    <color name="comment_time">#717171</color>
 </resources>

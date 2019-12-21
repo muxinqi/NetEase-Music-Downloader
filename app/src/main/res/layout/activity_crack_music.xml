@@ -13,8 +13,9 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="24dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginHorizontal="18dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -117,13 +118,26 @@
 
             </RelativeLayout>
 
-            <ListView
-                android:id="@+id/lyric_listview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginBottom="6dp"
+            android:paddingHorizontal="12dp"
+            android:drawableStart="@drawable/round_whatshot_24"
+            android:drawablePadding="2dp"
+            android:text="@string/great_reviews"
+            android:textSize="24sp" />
+
+        <ListView
+            android:id="@+id/music_comments_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="18dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="20dp"/>
 
     </LinearLayout>
 

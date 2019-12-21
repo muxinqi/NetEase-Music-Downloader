@@ -1,5 +1,7 @@
 package com.mtools.android.activity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -17,16 +19,24 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mtools.android.R;
+import com.mtools.android.adapter.CommentAdapter;
+import com.mtools.android.class_define.MusicComment.Comment;
+import com.mtools.android.class_define.MusicComment.HotComments;
+import com.mtools.android.class_define.MusicComment.User;
+import com.mtools.android.class_define.CommentItem;
 import com.mtools.android.class_define.MusicDownload.Data;
 import com.mtools.android.class_define.MusicDownload.MusicDownload;
 import com.mtools.android.class_define.single_music.A_Song;
@@ -41,6 +51,7 @@ import com.mtools.android.util.Utility;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
@@ -48,6 +59,8 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static com.bumptech.glide.request.RequestOptions.circleCropTransform;
 
 public class crack_music extends AppCompatActivity implements View.OnClickListener {
 
@@ -100,6 +113,12 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
         }
     };
 
+    private String commentUrl;
+
+    private List<CommentItem> commentItemList = new ArrayList<>();
+
+    ListView commentListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +127,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
         // 初始化组件
         musicId = getIntent().getStringExtra("extra_data");
         musicUrl = "http://music.163.com/song/media/outer/url?id="+musicId+".mp3";
+        commentUrl = "http://music.163.com/api/v1/resource/comments/R_SO_4_"+musicId+"?limit=10";
         Toolbar toolbar = findViewById(R.id.toolbar);
         songNameText = findViewById(R.id.song_name_text);
         artistsNameText = findViewById(R.id.artists_name_text);
@@ -167,6 +187,9 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                 musicPauseButton.setVisibility(View.INVISIBLE);
             }
         });
+
+        // 显示歌曲评论
+        requestCommentsList();
     }
 
 
@@ -419,7 +442,8 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
     }
 
     /**
-     * 传入a_song对象 显示 歌名、歌手、专辑图
+     * @param a_song 传入a_song对象
+     * 显示歌名、歌手、专辑图
      * */
     private void showA_SongInfo(A_Song a_song) {
         // 由返回的JSON可知 Songs永远只有一个 所以此循环只运行一次
@@ -462,7 +486,7 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
         }
     }
     /**
-     * 传入专辑图链接
+     * @param url 专辑图链接
      * 调用Glide显示圆角图片
      * */
     private void loadAlbumImg(final String url) {
@@ -486,6 +510,108 @@ public class crack_music extends AppCompatActivity implements View.OnClickListen
                 Toast.makeText(this, "拒绝权限将无法下载", Toast.LENGTH_SHORT).show();
 //                finish();
             }
+        }
+    }
+
+    /**
+     * 根据评论API链接 获取json数据并反序列化为comment对象
+     * 调用 两个函数来显示歌曲评论
+     * */
+    private void requestCommentsList() {
+        HttpUtil.sendOkHttpRequest(commentUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(crack_music.this, "获取评论信息失败\n请检查API可用性", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String responseText = Objects.requireNonNull(response.body()).string();
+                Log.d("GOOD", "onResponse: "+responseText.substring(responseText.length()-500, responseText.length()-1));
+                final Comment comment = Utility.handleJsonToObject(responseText, Comment.class, false);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (comment.getCode() == 200) {
+                                initCommentList(comment);
+                                showCommentList();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(crack_music.this, "歌曲评论状态码错误", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 显示评论的ListView
+     * */
+    private void showCommentList() {
+        commentListView = findViewById(R.id.music_comments_listview);
+        commentListView.setAdapter(new CommentAdapter(crack_music.this, R.layout.comments_item, commentItemList) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                CommentItem commentItem = getItem(position);    // 获取当前项的CommentItem对象
+                View view;
+                if (convertView == null) {
+                    // convertView 用于缓存之前加载好的布局
+                    // 若其为空则需要加载
+                    view = LayoutInflater.from(getContext()).inflate(getResourceId(), parent, false);
+                } else {
+                    // 若其不为空则直接调用它
+                    view = convertView;
+                }
+                // 初始化组件
+                ImageView commentatorAvatar = view.findViewById(R.id.commentators_avatar_image);
+                TextView commentatorName = view.findViewById(R.id.commentators_name_text);
+                TextView commentatorContent = view.findViewById(R.id.commentators_content_text);
+                TextView commentTime = view.findViewById(R.id.comment_time_text);
+                TextView likedCount = view.findViewById(R.id.comment_like_count_text);
+                // Glide 加载评论者头像（圆形）
+                GlideApp.with(getContext())
+                        .load(Objects.requireNonNull(commentItem).getCommentAvatarUrl())
+                        .apply(circleCropTransform())
+                        .into(commentatorAvatar);
+                // 显示内容
+                commentatorName.setText(commentItem.getCommentName());
+                commentatorContent.setText(commentItem.getCommentContent());
+                // 日期需要处理之后使用
+                Date time = commentItem.getTime();
+                SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.CHINA);
+                commentTime.setText(ft.format(time));
+                likedCount.setText(String.valueOf(commentItem.getLikedCount()));
+                return view;
+            }
+        });
+    }
+
+    /**
+     * @param comment 评论数据实体化的对象
+     * 遍历对象 填充commentItemList列表
+     * */
+    private void initCommentList(Comment comment) {
+        for (HotComments hotComments : comment.getHotComments()) {
+            String commentContent = hotComments.getContent();
+            long likedCount = hotComments.getLikedCount();
+            Date time = new Date(hotComments.getTime());
+
+            User user = hotComments.getUser();
+            String commentName = user.getNickname();
+            String commentAvatarUrl = user.getAvatarUrl() + "?param=64y64";
+
+            CommentItem commentItem = new CommentItem(commentName, commentContent, commentAvatarUrl, likedCount, time);
+            commentItemList.add(commentItem);
         }
     }
 
