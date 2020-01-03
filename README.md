@@ -1,52 +1,28 @@
-# Netease-Music-Downloader
+English | [中文](README-zh_CN.md)
 
-## 安卓程序开发
+# NetEase-Music-Downloader
 
-### 一、课程设计功能概述 - 共10分
-- [ ] 软件实现的总体功能 - 2分
-- [ ] 各功能模块介绍 - 6分
-- [ ] 软件应用场景介绍 - 2分
+An application that identifies NetEase music / playlist links, and uses NetEase API to obtain data to play, download songs, display popular reviews of songs, or add songs to the playlist in the software.
 
-### 二、完成设计的关键技术 - 共60分
+This project is the final assignment for the "Mobile Application Development Training" course.
 
-#### 1
-- [x] Toast的使用 - 2分
-- [x] 和数据的传递 - 3分
-- [x] 实现页面之间的跳转 - 2分
+The following techniques are used:
+- [Material Design](https://material.io/design/) - Beautify the interface
+- [OkHttp](https://github.com/square/okhttp) - Obtain data from network
+- [Jackson](https://github.com/FasterXML/jackson) - Deal with JSON
+- [Glide](https://github.com/bumptech/glide) - Load image
+- [Glide-Transformations](https://github.com/wasabeef/glide-transformations) - Assist Glide to load pictures more diversely
+- [Android-Debug-Database](https://github.com/amitshekhariitbhu/Android-Debug-Database) - Program debugging
 
-#### 2
-- [x] 使用子布局 - 2分
-- [x] 至少使用两种布局 - 4分
+## Usage
 
-#### 3
-- [x] 和点击操作 - 5分
-- [x] 使用 ListView 控件或 RecyclerView 控件进行显示 - 5分
+    Compile and run with Android studio
+    Requires Android API >= 29
+    
+## Screenshot
 
-#### 4
-- [x] SQLite数据库 增 - 2分
-- [x] 删 - 2分
-- [x] 改 - 2分
-- [x] 查 - 4分
-#### 5
-- [x] 停止 - 2分
-- [x] 暂停 - 2分
-- [x] 视频或音频文件播放 - 4分
+![image](./images/1.png)
+![image](./images/2.png)
 
-#### 6
-- [x] 接收广播 - 4分
-
-#### 7
-- [x] 使用内容提供器 - 4分
-
-#### 8
-- [x] 定义服务 - 2分
-- [x] 启动和停止服务 - 4分
-- [x] 活动或服务的通信 - 5分
-
-### 三、应用程序实现 - 共30分
-- [ ] 应用程序界面截图 - 10分
-- [ ] 应用程序源代码 - 10分
-- [ ] 应用程序源代码释义 - 10分
-
-
-
+## License
+![License](https://img.shields.io/github/license/muxq99/Netease-Music-Downloader)
